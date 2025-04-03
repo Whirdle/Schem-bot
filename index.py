@@ -45,21 +45,17 @@ def get_schematic_format(version):
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# testing server
-GUILD_ID = 1173629467764207708
-
 @bot.event
 async def on_ready():
     try:
-        # testing server
-        guild = discord.Object(id=GUILD_ID)
-        synced = await bot.tree.sync(guild=guild)
-        logging.info(f"updated commands for {GUILD_ID}")
+        # Sync commands globally
+        synced = await bot.tree.sync()
+        logging.info("commands synced")
     except Exception as e:
         logging.error(exc_info=e)
     logging.info(f"started {bot.user}")
 
-@bot.tree.command(name="schem", description="Debug a .schem file", guild=discord.Object(id=GUILD_ID))
+@bot.tree.command(name="schem", description="Debug a .schem file")
 async def schem(interaction: discord.Interaction, file: discord.Attachment):
     
     logging.info(f"{interaction.user} ran /schem {file.filename}")
@@ -111,7 +107,7 @@ async def schem(interaction: discord.Interaction, file: discord.Attachment):
                 title=f"Schematic: {file.filename}",
                 description=(
                     f"**__Format:__**"
-                    f"\n> {schematic_format},"
+                    f"\n> {schematic_format}"
                     f"\n**__MC version:__**"
                     f"\n> {minecraft_version}"
                     f"\n\n# loading with Axiom"
@@ -119,7 +115,7 @@ async def schem(interaction: discord.Interaction, file: discord.Attachment):
                     f"\n - choose `{file.filename}`"
                     f"\n\n# loading with Worledit"
                     f"\n- Put `{file.filename}` into your `.minecraft\config\worldedit\schematics` folder"
-                    f"\n - ```{command_text}```"
+                    f"\n - ```{worldeditcommand}```"
                     f"\n\n# loading with FAWE"
                     f"\n- Upload {file.filename} to [**FAWE schematic center**](<https://schem.intellectualsites.com/fawe/index.php>) (or [**BR schematic center**](<https://www.buildersrefuge.com/schematics/>))"
                     f"\n-# Use BR schem center if uploading to BR"
@@ -134,7 +130,7 @@ async def schem(interaction: discord.Interaction, file: discord.Attachment):
                 title=file.filename,
                 description=(
                     f"**__Format:__**"
-                    f"\n> {schematic_format},"
+                    f"\n> {schematic_format}"
                     f"\n**__MC version:__**"
                     f"\n> {minecraft_version}"
                     f"\n\n# loading with Axiom"
@@ -142,7 +138,7 @@ async def schem(interaction: discord.Interaction, file: discord.Attachment):
                     f"\n - choose `{file.filename}`"
                     f"\n\n# loading with Worledit"
                     f"\n- Put `{file.filename}` into your `.minecraft\config\worldedit\schematics` folder"
-                    f"\n - ```{command_text}```"
+                    f"\n - ```{worldeditcommand}```"
                     f"\n\n# loading with FAWE"
                     f"\n- Upload {file.filename} to [**FAWE schematic center**](<https://schem.intellectualsites.com/fawe/index.php>)"
                     f"\n - Change outputted command do `//schematic load {schematic_format} url:URLHERE`"
