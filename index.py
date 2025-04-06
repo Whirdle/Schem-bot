@@ -5,34 +5,18 @@ import io
 import logging
 from discord import app_commands
 import secret
+import requests
 
 logging.basicConfig(level=logging.INFO)
 
 def map_data_version(data_version):
-    mapping = {
-        3463: "1.20",
-        3465: "1.20.1",
-        3578: "1.20.2",
-        3698: "1.20.3",
-        3700: "1.20.4",
-        3837: "1.20.5",
-        3839: "1.20.6",
-        3953: "1.21",
-        3955: "1.21.1",
-        4080: "1.21.2",
-        4082: "1.21.3",
-        4189: "1.21.4",
-        4325: "1.21.5",
-    }
-    lowest = min(mapping.keys())
-    latest = max(mapping.keys())
+    url = f"https://axiomassets.net/api/misc/parse-data-version/{data_version}"
 
-    if data_version < lowest:
-        return f"<1.20 ([unmapped data version: {data_version}](<https://minecraft.wiki/w/Data_version#List_of_data_versions>))"
-    elif data_version > latest:
-        return f">1.21.5 ([unmapped data version: {data_version}](<https://minecraft.wiki/w/Data_version#List_of_data_versions>))"
-    elif data_version in mapping:
-        return mapping[data_version]
+    response = requests.post(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        return data["version"]
     else:
         return f"Unknown ([data version: {data_version}](<https://minecraft.wiki/w/Data_version#List_of_data_versions>))"
 
